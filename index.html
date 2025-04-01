@@ -16,7 +16,6 @@
 
     <link rel="stylesheet" href="style.css" />
 
-    <script src="app.js" defer></script>
     <title>Book Store</title>
   </head>
   <body>
@@ -28,13 +27,18 @@
         </div>
         <div class="navItem">
           <div class="search">
-            <input type="text" placeholder="Search..." class="searchInput" />
-            <span class="material-symbols-outlined" height="10px">
+            <input
+              type="text"
+              placeholder="Search title.."
+              class="searchInput"
+            />
+            <span class="material-symbols-outlined search-icon" height="10px">
               search
             </span>
           </div>
         </div>
       </div>
+      <dialog class="search-results"></dialog>
 
       <div class="title">
         <img src="assets/images/book (1).png" alt="" class="image" />
@@ -43,24 +47,25 @@
       <div class="navBottom sidebar">
         <ul>
           <li><a href="">Home</a></li>
-          <li><a href="">Categories</a></li>
-          <li><a href="">Featured</a></li>
+          <li><a href="#genre">Categories</a></li>
+          <li><a href="#featured">Featured</a></li>
           <li><a href="">New Arrivals</a></li>
           <li><a href="">Contact</a></li>
         </ul>
       </div>
 
-      <div class="entryImg">
+      <!-- <div class="entryImg">
         <img
           src="assets/images/library-7803315_1280.jpg"
           alt="image of a library"
           width="100%"
           height="700px"
         />
-      </div>
+      </div> -->
       <div class="layerContent"></div>
 
-      <div class="genre-container">
+      <div class="genre-container" id="genre">
+        <h2>Genres</h2>
         <div class="slide-wrapper">
           <div class="slide">
             <img
@@ -87,7 +92,7 @@
         </div>
       </div>
 
-      <div class="book-Cont">
+      <div class="book-Cont" id="featured">
         <h2>Featured Books</h2>
         <div class="featured">
           <div class="f-book">
@@ -140,5 +145,8 @@
         <button class="addBookBtn">Add Book</button>
       </div>
     </div>
+
+    <script src="js/app.js" defer type="module"></script>
+    <script src="js/apis.js" defer></script>
   </body>
 </html>
