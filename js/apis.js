@@ -6,7 +6,7 @@ async function searchBook() {
   let bookTitle = input.value.toLowerCase().trim();
   try {
     let response = await fetch(
-      `https://openlibrary.org/search.json?q=${bookTitle}`
+      `https://openlibrary.org/search.json?title=${bookTitle}`
     );
 
     let data = await response.json();
@@ -19,27 +19,29 @@ async function searchBook() {
 }
 
 function bookInfo(data) {
-  searchResults.innerHTML = "";
-  let results = document.createElement("ul");
-  for (let i = 0; i < data.docs.length; i++) {
-    if (
-      data.docs[i].has_fulltext === true &&
-      data.docs[i].public_scan_b === true
-    ) {
-      let listItem = document.createElement("li");
-      let link = document.createElement("a");
-      link.href = `https://openlibrary.org${data.docs[i].key}`;
-      link.target = "_blank";
-      link.textContent = data.docs[i].title;
+  searchResults.innerHTML = ""; // Clear previous results
 
-      listItem.append(link);
-      results.append(listItem);
-      searchResults.append(results);
-      searchResults.showModal();
-
-      console.log(listItem.textContent + link.href);
-    }
+  if (data.docs.length === 0) {
+    searchResults.innerHTML = `<p>No results found for "${input.value}".</p>`;
+    return;
   }
+
+  data.docs.forEach((book) => {
+    let bookDiv = document.createElement("div");
+    bookDiv.classList.add("book-item");
+
+    let title = book.title || "No title available";
+    let author = book.author_name ? book.author_name.join(", ") : "Unknown";
+    let coverId = book.cover_i ? book.cover_i : "No cover available";
+
+    bookDiv.innerHTML = `
+      <img src="https://covers.openlibrary.org/b/id/${coverId}-M.jpg" alt="${title}">
+      <h3>${title}</h3>
+      <p>Author: ${author}</p>
+    `;
+
+    searchResults.appendChild(bookDiv);
+  });
 }
 
 span.addEventListener("click", searchBook);
