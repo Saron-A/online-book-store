@@ -47,42 +47,39 @@ let searchResults = document.querySelector(".search-results");
 async function searchBook() {
   let bookTitle = input.value.toLowerCase().trim();
 
-  let response1 = await axios.get(
+  let response = await axios.get(
     `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
       bookTitle
     )}&langRestrict=en&printType=books&maxResults=20`
   ); //google books api
 
-  let data = response1.data;
+  let data = response.data;
   console.log(data);
 
-  let response2 = await axios.get(
-    `https://openlibrary.org/search.json?title=${bookTitle}`
-  ); //openlibrary
-
-  bookInfo(data, response2);
+  bookInfo(data, response);
 }
 
-function bookInfo(data, response2) {
+function bookInfo(data, response) {
   searchResults.innerHTML = "";
 
-  const language = book.volumeInfo.language;
-  const isEmbeddable = book.accessInfo.embeddable;
-  const isEpubAvailable = book.accessInfo.epub?.isAvailable;
-  const isPdfAvailable = book.accessInfo.pdf?.isAvailable;
+  data.items.forEach((book) => {
+    const language = book.volumeInfo.language;
+    const isEmbeddable = book.accessInfo.embeddable;
+    const isEpubAvailable = book.accessInfo.epub?.isAvailable;
+    const isPdfAvailable = book.accessInfo.pdf?.isAvailable;
 
-  // Filter only English books with download availability
-  if (
-    language === "en" &&
-    isEmbeddable &&
-    (isEpubAvailable || isPdfAvailable)
-  ) {
-    let title = book.volumeInfo.title;
-    let bookLink = book.accessInfo.webReaderLink;
-    let author = book.volumeInfo.authors?.[0] || "Unknown author";
-    let coverimg = book.volumeInfo?.smallThumbnail || "fallback.jpg";
+    // Filter only English books with download availability
+    if (
+      language === "en" &&
+      isEmbeddable &&
+      (isEpubAvailable || isPdfAvailable)
+    ) {
+      let title = book.volumeInfo.title;
+      let bookLink = book.accessInfo.webReaderLink;
+      let author = book.volumeInfo.authors?.[0] || "Unknown author";
+      let coverimg = book.volumeInfo?.smallThumbnail || "fallback.jpg";
 
-    searchResults.innerHTML += `
+      searchResults.innerHTML += `
         <div class="s-result">
          <img src="${coverimg}" alt="${title}">
         <h3>${author}</h3>
@@ -91,8 +88,9 @@ function bookInfo(data, response2) {
         
         </div>`;
 
-    console.log(title, author, bookLink);
-  }
+      console.log(title, author, bookLink);
+    }
+  });
 }
 
 span.addEventListener("click", searchBook);
